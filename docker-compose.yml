@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # 1. Database Service
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=devops_inventory
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=supersecret
+    restart: always
+
+  # 2. Backend Service (Django)
+  web:
+    build: ./backend
+    command: sh -c "python manage.py migrate && gunicorn --bind 0.0.0.0:8000 app.wsgi:application"
+    volumes:
+      - ./backend:/app
+    expose:
+      - 8000
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: always
+
+  # 3. Nginx (Reverse Proxy)
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    restart: always
+
+volumes:
+  postgres_data:
