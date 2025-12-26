@@ -21,4 +21,5 @@ COPY . .
 EXPOSE 8000
 
 # Default Command
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app.wsgi:application"] 
+#nginx er rqst django rcv kore ekhane gunicorn diye

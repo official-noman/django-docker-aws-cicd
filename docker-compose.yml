@@ -32,7 +32,8 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - "80:80"
+       - "80:80" # gateway, user hit korle etar maddhome nginx e dhuke jay
+      # left 80 aws(host) port, right side er ta nginx(container) er port
     depends_on:
       - web
     restart: always
