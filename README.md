@@ -21,6 +21,7 @@ graph LR
     Nginx -- Forward Request --> Web[Django + Gunicorn]
     Web -- Read/Write Data --> DB[(PostgreSQL Database)]
     Web -- Logs/Monitor --> GitHub[GitHub Actions CI/CD]
+
 🌟 Key Features
 
 Containerization: Fully Dockerized environment (Web, DB, Nginx) ensuring consistency across Dev and Prod.
