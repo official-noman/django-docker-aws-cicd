@@ -20,8 +20,8 @@ graph LR
     User[User / Client] -- HTTP Request --> Nginx[Nginx Reverse Proxy]
     Nginx -- Forward Request --> Web[Django + Gunicorn]
     Web -- Read/Write Data --> DB[(PostgreSQL Database)]
-    Web -- Logs/Monitor --> GitHub[GitHub Actions CI/CD]
-
+    Web -- Logs/Monitor --> GitHub[GitHub Actions CI/CD] ```
+ 
 🌟 Key Features
 
 Containerization: Fully Dockerized environment (Web, DB, Nginx) ensuring consistency across Dev and Prod.
@@ -150,6 +150,5 @@ Nginx Configuration
 Nginx is set up to listen on Port 80 and forward traffic to the Django container on Port 8000 using proxy_pass.
 
 👨‍💻 Author
+Abdullah Al Noman
 
-Noman Mahmud
-Aspiring DevOps Engineer
