@@ -122,5 +122,5 @@ docker-compose exec web pytest
 
 **Abdullah Al Noman**
 
-- **GitHub:** `https://github.com/official-noman`
+- **GitHub:** `[https://www.linkedin.com/in/abdullah-al-noman-772999376/](url)`
 - **LinkedIn:** `https://www.linkedin.com/in/abdullah-al-noman-772999376/`
