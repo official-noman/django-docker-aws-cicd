@@ -1,144 +1,126 @@
-# 🚀 Cloud-Native Inventory Management API
+# 🚀 Multi-Tenant SaaS: Cloud-Native POS & Inventory System
 
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 
-A production-ready **3-Tier REST API** built with **Django** & **PostgreSQL**, containerized with **Docker**, served via **Nginx Reverse Proxy**, and deployed on **AWS EC2** with fully automated **CI/CD pipelines**.
-
----
-
-## 🏗 Architecture
-
-The system follows a 3-tier, container-based architecture orchestrated by **Docker Compose**:
-
-```mermaid
-graph LR
-    User[User / Client] -- HTTP Request --> Nginx[Nginx Reverse Proxy]
-    Nginx -- Forward Request --> Web[Django + Gunicorn]
-    Web -- Read/Write Data --> DB[(PostgreSQL Database)]
-    Web -- Logs/Monitor --> GitHub[GitHub Actions CI/CD]
-```
+A comprehensive, production-ready **Software-as-a-Service (SaaS)** platform built to empower small, local businesses with a modern, fast, and easy-to-use **Point of Sale (POS)** and **Inventory Management** solution. The system is architected with a secure, multi-tenant backend and is designed for deployment on cloud infrastructure like AWS using a fully containerized CI/CD pipeline.
 
 ---
 
 ## 🌟 Key Features
 
-- **Containerization:** Fully Dockerized environment (Web, DB, Nginx) ensuring consistency across Dev and Prod.
-- **Reverse Proxy:** Nginx configured as a secure gateway and static file handler.
-- **CI/CD Automation:** GitHub Actions pipeline triggers on every push to build and deploy Docker images.
-- **Database Persistence:** Uses Docker Volumes to persist PostgreSQL data.
-- **Optimization:** Configured swap memory on AWS EC2 (t2.micro) to prevent OOM crashes.
-- **Resilience:** Healthchecks to prevent race conditions between Django and PostgreSQL.
-- **Dynamic DNS:** Integrated with DuckDNS for consistent domain access.
+This platform is more than just an inventory tracker; it's a complete business management tool designed to solve real-world problems for local retailers.
+
+- **Secure Multi-Tenant Architecture:** Every store gets its own isolated, secure space. One store's data is completely invisible to another, ensuring privacy and data integrity.
+- **High-Speed Hybrid POS System:** A user-friendly Point of Sale interface that combines:
+    - **"Favorite Buttons"** for instant, one-tap billing of frequently sold items during peak hours.
+    - **Barcode Scanning** support for quick and accurate product entry.
+- **"Bakir Khata" (Digital Due Ledger):** A powerful feature to manage customer credit. Track dues, record payments, and send reminders to customers via SMS or WhatsApp intents directly from the app.
+- **Smart Global Product Catalog:** Drastically reduces manual data entry. Scanning a common branded product (like a Coke bottle) automatically fetches its name and price from a global catalog, which the owner can then customize.
+- **Role-Based Staff Management:** `Store_Owner` and `Staff` roles with different permissions. Owners have full control, while staff can only manage sales, preventing unauthorized access to sensitive business data.
+- **Business Intelligence Dashboard:** An insightful dashboard providing real-time analytics on daily sales, total outstanding dues, top-selling products, and low-stock alerts.
 
 ---
 
-## 🛠 Tech Stack
+## 🏗️ System Architecture
 
-- **Backend:** Python, Django REST Framework  
-- **Server:** Gunicorn (WSGI)  
-- **Database:** PostgreSQL 13  
-- **Infrastructure:** AWS EC2 (Ubuntu 22.04 LTS)  
-- **DevOps / Tooling:** Docker, Docker Compose, GitHub Actions, Nginx, Linux Administration  
+The application follows a robust, scalable, and containerized 3-tier architecture orchestrated by Docker Compose.
+
+```mermaid
+graph LR
+    subgraph "Browser / PWA (Next.js)"
+        User[Shop Owner / Staff]
+    end
+
+    subgraph "Cloud Infrastructure (AWS EC2)"
+        Nginx[Nginx Reverse Proxy]
+        subgraph "Docker Containers"
+            WebApp[Django + Gunicorn]
+            DB[(PostgreSQL)]
+            Cache[(Redis)]
+        end
+    end
+
+    subgraph "DevOps & CI/CD"
+        CI[GitHub Actions: Test, Lint, Build]
+    end
+
+    User -- HTTPS Request --> Nginx
+    Nginx -- Serves Static Files --> User
+    Nginx -- Proxy Pass --> WebApp
+    WebApp -- Read/Write --> DB
+    WebApp -- Caching --> Cache
+    CI -- Pushes to --> Docker Hub
+    CI -- Deploys on --> AWS EC2
+```
 
 ---
 
-## ⚙️ Installation & Local Setup
+## 🛠️ Tech Stack
 
-### ✅ Prerequisites
+| Category      | Technology                                                                                                   |
+|---------------|--------------------------------------------------------------------------------------------------------------|
+| **Backend**       | Python, Django, Django REST Framework                                                                        |
+| **Database**      | PostgreSQL (Primary), Redis (Caching)                                                                       |
+| **API & Auth**  | RESTful API, JWT (djangorestframework-simplejwt), Swagger/OpenAPI (drf-spectacular)                          |
+| **DevOps**        | Docker, Docker Compose, Nginx, Gunicorn, GitHub Actions (CI/CD)                                                |
+| **Cloud**         | AWS EC2                                                                                                      |
+| **Testing**       | Pytest, Pytest-Django                                                                                        |
 
-- **Docker** & **Docker Compose** installed  
-- **Git** installed  
+---
 
-### 1️⃣ Clone the repository
+## ⚙️ Local Setup & Installation
 
+To get the project running locally, ensure you have **Docker** and **Docker Compose** installed.
+
+### 1. Clone the Repository
 ```bash
-git clone https://github.com/official-noman/django-docker-aws-cicd.git
-cd django-docker-aws-cicd
+git clone https://github.com/[your-github-username]/[your-repo-name].git
+cd [your-repo-name]
 ```
 
-### 2️⃣ Create Environment Variables
-
-Create a `.env` file in the project root:
-
-```env
-SECRET_KEY=dev-secret-key
-DEBUG=True
-DB_NAME=devops_inventory
-DB_USER=hello_django
-DB_PASSWORD=supersecret
-DB_HOST=db
-DB_PORT=5432
-ALLOWED_HOSTS=*
-```
-
-### 3️⃣ Build and Run Containers
-
+### 2. Create Environment Variables
+Create a `.env` file in the project root by copying the example file.
 ```bash
-docker-compose up -d --build
+cp .env.example .env
 ```
+Now, open the `.env` file and fill in the necessary variables (default values are mostly fine for local development).
 
-### 4️⃣ Apply Database Migrations
+### 3. Build and Run the Containers
+```bash
+docker-compose up --build -d
+```
+This command will build the Docker images and start all the services (Django, Nginx, PostgreSQL, Redis) in detached mode.
 
+### 4. Apply Database Migrations
 ```bash
 docker-compose exec web python manage.py migrate
 ```
 
-### 5️⃣ Access the API
-
-- Health Check: `http://localhost/api/health/`
-- Product Inventory: `http://localhost/api/products/`
-
----
-
-## 🚀 API Endpoints
-
-| Method | Endpoint          | Description                               |
-|--------|-------------------|-------------------------------------------|
-| GET    | `/api/health/`    | Check system status (DevOps health check) |
-| GET    | `/api/products/`  | Retrieve list of all products             |
-| POST   | `/api/products/`  | Create a new product (JSON body required) |
-
-### Sample JSON for `POST /api/products/`
-
-```json
-{
-  "name": "Gaming Laptop",
-  "price": "120000.00",
-  "quantity": 5
-}
-```
-
----
-
-## ☁️ Deployment Details (AWS)
-
-This project is deployed on an **AWS EC2 t2.micro** instance.
-
-### Optimization for Low Memory (1GB RAM)
-
-To handle the load of 3 containers on a free-tier instance, a **2GB swap file** was configured:
-
+### 5. Create a Superuser (for Admin Panel)
 ```bash
-sudo fallocate -l 2G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
+docker-compose exec web python manage.py createsuperuser
 ```
 
-### Nginx Configuration
+### 6. Access the Application
+- **API (Swagger UI):** [http://localhost/api/docs/](http://localhost/api/docs/)
+- **Admin Panel:** [http://localhost/admin/](http://localhost/admin/)
 
-Nginx is set up to:
-
-- Listen on **Port 80**
-- Forward traffic to the Django container on **Port 8000** using `proxy_pass`
+### 7. Run Tests
+```bash
+docker-compose exec web pytest
+```
 
 ---
 
 ## 👨‍💻 Author
-**Abdullah Al Noman**  
-```
+
+**Abdullah Al Noman**
+
+- **GitHub:** `https://github.com/official-noman`
+- **LinkedIn:** `https://www.linkedin.com/in/abdullah-al-noman-772999376/`
